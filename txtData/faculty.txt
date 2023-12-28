@@ -1,0 +1,5 @@
+# перечень факультетов
+--Gryffindor --red
+--Hufflepuff --yellow
+--Slytherin --green
+--Ravenclaw --blue
