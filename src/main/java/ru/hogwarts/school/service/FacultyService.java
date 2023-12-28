@@ -1,37 +1,79 @@
 package ru.hogwarts.school.service;
 
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.ErrBadRequestException;
 import ru.hogwarts.school.model.Faculty;
 
 import java.util.HashMap;
-import java.util.Optional;
 
 import static ru.hogwarts.school.exception.RunErrBadRequestException.runException;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class FacultyService {
-    private HashMap<Long, Faculty> facultyHashMap;
+    private HashMap<Long, Faculty> hashMap;
 
-    // TODO: реализовать заполнение facultyHashMap
+    public void init(HashMap<Long, Faculty> hashMap) {
+        if (this.hashMap == null) {
+            this.hashMap = hashMap;
+        }
+    }
+
+    private Long getMaxId() {
+        return hashMap.keySet().stream()
+                .max(Long::compare)
+                .orElseThrow(()-> {
+                    throw new ErrBadRequestException("Нет данных в hashMap");});
+    }
+
+    private boolean isExists(Faculty item) {
+        if (item.getId() == null) {
+            runException("id is null");
+        }
+        return hashMap.values().stream()
+                .filter(faculty -> faculty.getName().equals(item))
+                .findFirst().isPresent();
+    }
+
     public Faculty add(Faculty item) {
-        runException("the method is not completed");
-        return null;
+
+        if (isExists(item)) {
+            runException("Повторный ввод данных");
+        }
+
+        item.setId(getMaxId() + 1);
+        hashMap.put(item.getId(), item);
+
+        return item;
     }
 
     public Faculty read(Long id) {
-        runException("the method is not completed");
-        return null;
+        if (!hashMap.containsKey(id)) {
+            runException("Нет данных по id " + id);
+        }
+
+        return hashMap.get(id);
     }
 
     public Faculty update(Faculty item) {
-        runException("the method is not completed");
-        return null;
+        if (!hashMap.containsKey(item.getId())) {
+            runException("Нет данных");
+        }
+
+        hashMap.put(item.getId(), item);
+        return item;
     }
 
     public Faculty delete(Long id) {
-        runException("the method is not completed");
-        return null;
+
+        var item = hashMap.get(id);
+        if (id == null) {
+            runException("Нет данных");
+        }
+
+        hashMap.remove(id);
+        return item;
     }
 
 }

@@ -21,19 +21,23 @@ public class LoadDataFromFile {
         var path = Path.of("txtData/student.txt");
 
         try (var scanner = new Scanner(path)) {
-            String pattern = "--(.+)\\s+--(\\d+)\\s+(\\w+)";
+            String pattern = "--(.+)\\s+--(\\d+)\\s+--(\\w+)";
             Pattern r = Pattern.compile(pattern);
             Long id = 1L;
 
             while (scanner.hasNextLine()) {
                 var line = scanner.nextLine();
+                if (line.startsWith("#")) {
+                    continue;
+                }
+
                 Matcher matcher = r.matcher(line);
                 if (matcher.find()) {
                     Student student = new Student();
                     student.setId(id++);
                     student.setName(matcher.group(1).trim());
-                    student.setAge( Integer.getInteger(matcher.group(2).trim()));
-                    student.setFaculty(matcher.group(3));
+                    student.setAge(Integer.parseInt(matcher.group(2).trim()));
+                    student.setFaculty(matcher.group(3).trim());
 
                     result.add(student);
 
@@ -51,9 +55,30 @@ public class LoadDataFromFile {
     public static List<Faculty> loadListFaculties() {
         List<Faculty> result = new ArrayList<>();
         var path = Path.of("txtData/faculty.txt");
+
         try (var scanner = new Scanner(path)) {
+            String pattern = "--(\\w+)\\s+--(\\w+)";
+            Pattern r = Pattern.compile(pattern);
+            Long id = 1L;
             while (scanner.hasNextLine()) {
-                System.out.println(scanner.nextLine());
+                var line = scanner.nextLine();
+                if (line.startsWith("#")) {
+                    continue;
+                }
+
+                Matcher matcher = r.matcher(line);
+                if (matcher.find()) {
+                    Faculty faculty = new Faculty();
+
+                    faculty.setId(id++);
+                    faculty.setName(matcher.group(1).trim());
+                    faculty.setColor(matcher.group(2).trim());
+
+                    result.add(faculty);
+
+                } else {
+                    throw new ErrBadRequestException("Ошибка чтения строки из файла faculty");
+                }
             }
         } catch (IOException ex) {
             throw new ErrBadRequestException("Ошибка загрузки данных из файла faculty.txt");
