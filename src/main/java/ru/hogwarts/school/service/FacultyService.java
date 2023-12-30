@@ -27,10 +27,13 @@ public class FacultyService {
                     throw new ErrBadRequestException("Нет данных в hashMap");});
     }
 
+    public boolean isExists(String item) {
+        return hashMap.values().stream()
+                .filter(faculty -> faculty.getName().equals(item))
+                .findFirst().isPresent();
+    }
+
     private boolean isExists(Faculty item) {
-        if (item.getId() == null) {
-            runException("id is null");
-        }
         return hashMap.values().stream()
                 .filter(faculty -> faculty.getName().equals(item))
                 .findFirst().isPresent();
@@ -68,7 +71,7 @@ public class FacultyService {
     public Faculty delete(Long id) {
 
         var item = hashMap.get(id);
-        if (id == null) {
+        if (item == null) {
             runException("Нет данных");
         }
 

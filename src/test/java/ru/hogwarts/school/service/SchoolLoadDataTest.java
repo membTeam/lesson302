@@ -14,7 +14,7 @@ public class SchoolLoadDataTest {
 
     @Test
     public void LoadDataSchoolLoadData() {
-        assertDoesNotThrow(()-> schoolLoadData.run(""));
+        assertDoesNotThrow( ()-> schoolLoadData.run(""));
     }
 
 }
