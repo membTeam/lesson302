@@ -6,6 +6,7 @@ import ru.hogwarts.school.exception.ErrBadRequestException;
 import ru.hogwarts.school.model.Faculty;
 
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 import static ru.hogwarts.school.exception.RunErrBadRequestException.runException;
 
@@ -77,6 +78,19 @@ public class FacultyService {
 
         hashMap.remove(id);
         return item;
+    }
+
+    public Iterable<Faculty> color(String color) {
+        return hashMap.values()
+                .stream()
+                .filter(faculty-> faculty.getColor().equals(color))
+                .collect(Collectors.toList());
+    }
+
+    public Iterable<Faculty> all() {
+        return hashMap.values()
+                .stream()
+                .collect(Collectors.toList());
     }
 
 }

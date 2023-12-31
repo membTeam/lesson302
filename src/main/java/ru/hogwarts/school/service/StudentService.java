@@ -1,11 +1,12 @@
 package ru.hogwarts.school.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.ErrBadRequestException;
-import java.util.HashMap;
-
 import ru.hogwarts.school.model.Student;
+
+import java.util.HashMap;
+import java.util.stream.Collectors;
+
 import static ru.hogwarts.school.exception.RunErrBadRequestException.runException;
 
 @Service
@@ -60,6 +61,12 @@ public class StudentService {
         if (!strErr.isBlank()) {
             runException(strErr);
         }
+    }
+
+    public Iterable<Student> age(Integer age) {
+        return hashMap.values().stream()
+                .filter(student-> student.getAge() == age)
+                .collect(Collectors.toList());
     }
 
     public Student add(Student item) {

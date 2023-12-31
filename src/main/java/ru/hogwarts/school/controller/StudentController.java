@@ -36,4 +36,9 @@ public class StudentController {
         return ResponseEntity.ok(studentServ.delete(id));
     }
 
+    @GetMapping("/age/{age}")
+    public Iterable<Student> age(@PathVariable Integer age) {
+        return studentServ.age(age);
+    }
+
 }
